@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace WyChoong\Mpgs\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class MpgsPaymentTypeCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'lunarphp-mpgs';
 
     public $description = 'My command';
 
