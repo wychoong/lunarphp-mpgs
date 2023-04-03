@@ -4,7 +4,7 @@ namespace WyChoong\Mpgs\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use WyChoong\MpgsPaymentType\MpgsPaymentTypeServiceProvider;
+use WyChoong\Mpgs\MpgsPaymentServiceProvider;
 
 class TestCase extends Orchestra
 {
@@ -13,14 +13,14 @@ class TestCase extends Orchestra
         parent::setUp();
 
         Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'WyChoong\\MpgsPaymentType\\Database\\Factories\\' . class_basename($modelName) . 'Factory'
+            fn (string $modelName) => 'WyChoong\\Mpgs\\Database\\Factories\\' . class_basename($modelName) . 'Factory'
         );
     }
 
     protected function getPackageProviders($app)
     {
         return [
-            MpgsPaymentTypeServiceProvider::class,
+            MpgsPaymentServiceProvider::class,
         ];
     }
 
