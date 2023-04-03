@@ -26,6 +26,6 @@ return [
         'payment-success' => null,
 
         'payment-failed' => null,
-    ]
+    ],
 
 ];

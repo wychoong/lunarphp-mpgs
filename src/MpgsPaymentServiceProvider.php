@@ -2,14 +2,14 @@
 
 namespace WyChoong\Mpgs;
 
+use Illuminate\Support\Facades\Blade;
 use Livewire\Livewire;
 use Lunar\Facades\Payments;
-use Illuminate\Support\Facades\Blade;
 use Spatie\LaravelPackageTools\Package;
-use WyChoong\Mpgs\Managers\MpgsManager;
+use Spatie\LaravelPackageTools\PackageServiceProvider;
 use WyChoong\Mpgs\Components\PaymentForm;
 use WyChoong\Mpgs\Contracts\LunarMpgsInterface;
-use Spatie\LaravelPackageTools\PackageServiceProvider;
+use WyChoong\Mpgs\Managers\MpgsManager;
 
 class MpgsPaymentServiceProvider extends PackageServiceProvider
 {
