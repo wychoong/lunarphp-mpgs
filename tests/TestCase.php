@@ -1,6 +1,6 @@
 <?php
 
-namespace WyChoong\MpgsPaymentType\Tests;
+namespace WyChoong\Mpgs\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
@@ -13,7 +13,7 @@ class TestCase extends Orchestra
         parent::setUp();
 
         Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'WyChoong\\MpgsPaymentType\\Database\\Factories\\'.class_basename($modelName).'Factory'
+            fn (string $modelName) => 'WyChoong\\MpgsPaymentType\\Database\\Factories\\' . class_basename($modelName) . 'Factory'
         );
     }
 
