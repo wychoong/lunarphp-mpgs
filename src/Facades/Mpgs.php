@@ -2,15 +2,16 @@
 
 namespace WyChoong\Mpgs\Facades;
 
+use WyChoong\Mpgs\Contracts\LunarMpgsInterface;
 use Illuminate\Support\Facades\Facade;
 
 /**
  * @see \WyChoong\Mpgs\MpgsPaymentType
  */
-class MpgsFacade extends Facade
+class Mpgs extends Facade
 {
     protected static function getFacadeAccessor()
     {
-        return \WyChoong\Mpgs\MpgsPaymentType::class;
+        return LunarMpgsInterface::class;
     }
 }

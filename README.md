@@ -5,15 +5,14 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/wychoong/lunarphp-mpgs/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/wychoong/lunarphp-mpgs/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/wychoong/lunarphp-mpgs.svg?style=flat-square)](https://packagist.org/packages/wychoong/lunarphp-mpgs)
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+MPGS Hosted checkout integration for Lunar
 
-## Support us
-
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/lunarphp-mpgs.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/lunarphp-mpgs)
-
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
+Supported action
+- purchase
+  
+Not supported (PR welcome)
+- refund
+- authorize/capture
 
 ## Installation
 
@@ -23,37 +22,126 @@ You can install the package via composer:
 composer require wychoong/lunarphp-mpgs
 ```
 
-You can publish and run the migrations with:
-
-```bash
-php artisan vendor:publish --tag="lunarphp-mpgs-migrations"
-php artisan migrate
-```
-
 You can publish the config file with:
 
 ```bash
 php artisan vendor:publish --tag="lunarphp-mpgs-config"
 ```
 
-This is the contents of the published config file:
-
+###Enable the driver
+Set the driver in `config/lunar/payments.php`
 ```php
+<?php
+
 return [
+    // ...
+    'types' => [
+        'card' => [
+            'driver' => 'stripe',
+            'authorized' => 'payment-received',  # or any status key configured in lunar.orders.statuses
+        ],
+    ],
 ];
 ```
 
-Optionally, you can publish the views using
+###Add your MPGS credentials
+Set your MPGS_ variable in `.env`
+
+```bash
+MPGS_MERCHANT_ID=
+MPGS_API_PASSWORD=
+MPGS_VERSION=
+```
+
+#Setup
+We use closure to return the data you want to pass to the api
+
+```php
+use \WyChoong\Mpgs\Facades\Mpgs;
+
+// in service provider `boot` method
+Mpgs::initiateCheckoutUsing(function ($cart, $amount, $currency): array {
+    if (!$order = $cart->order) {
+        $order = $cart->createOrder();
+    }
+
+    $reference = $order->reference . date('Ymdhis');
+
+    return  [
+        // refer to the api spec for Initiate Checkout params
+        'order' => [
+            'id' => $reference,
+            'currency' => $currency,
+            'amount' => $amount,
+            'description' => "Payment for #" . $order->reference,
+            'reference' => $reference,
+        ],
+        'transaction' => [
+            'reference' => $reference,
+        ],
+        'interaction' => [
+            'merchant' => [
+                'name' => 'Lunar store',
+            ],
+            'displayControl' => [
+                'billingAddress' => 'HIDE',
+            ]
+        ]
+    ];
+});
+```
+
+# Backend Usage
+
+## Creating a PaymentIntent
+
+```php
+use \WyChoong\Mpgs\Facades\Mpgs;
+
+Mpgs::createIntent(\Lunar\Models\Cart $cart);
+```
+
+This method will initiate a checkout session to be used by `checkout.js`
+Latest session and order.id are stored in cart's meta
+```php
+'meta' => [
+    'payment_intent' => `session`,
+    'order_id' => `order.id`,
+],
+```
+
+# Storefront Usage
+
+This package only provide basic blade components to interact with MPGS,, publish the views to fit your storefront design
 
 ```bash
 php artisan vendor:publish --tag="lunarphp-mpgs-views"
 ```
 
-## Usage
+## Set up the scripts and payment component
+
+In the your checkout page
+```php
+@mpgsScripts
+
+@if ($paymentType == 'card')
+    <livewire:mpgs.payment :cart="$cart" />
+@endif
+```
+
+The component will handle the success payment for you.
+To redirect or add handling after payment verified, set your route or listen to livewire event
 
 ```php
-$mpgsPaymentType = new WyChoong\MpgsPaymentType();
-echo $mpgsPaymentType->echoPhrase('Hello, WyChoong!');
+// config/lunar-mpgs.php
+'route' => [
+    'payment-success' => null,
+    'payment-failed' => null,
+]
+
+// livewire events
+'mpgsPaymentSuccess'
+'mpgsPaymentFailed'
 ```
 
 ## Testing
