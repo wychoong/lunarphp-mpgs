@@ -2,8 +2,8 @@
 
 namespace WyChoong\Mpgs\Facades;
 
-use WyChoong\Mpgs\Contracts\LunarMpgsInterface;
 use Illuminate\Support\Facades\Facade;
+use WyChoong\Mpgs\Contracts\LunarMpgsInterface;
 
 /**
  * @see \WyChoong\Mpgs\MpgsPaymentType

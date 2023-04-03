@@ -3,28 +3,26 @@
 namespace WyChoong\Mpgs;
 
 use Exception;
-use Lunar\Models\Transaction;
-use WyChoong\Mpgs\Clients\Mpgs;
 use Illuminate\Support\Facades\DB;
-use Lunar\PaymentTypes\AbstractPayment;
-use Lunar\Base\DataTransferObjects\PaymentRefund;
-use Lunar\Base\DataTransferObjects\PaymentCapture;
 use Lunar\Base\DataTransferObjects\PaymentAuthorize;
+use Lunar\Base\DataTransferObjects\PaymentCapture;
+use Lunar\Base\DataTransferObjects\PaymentRefund;
 use Lunar\Models\Currency;
+use Lunar\Models\Transaction;
+use Lunar\PaymentTypes\AbstractPayment;
+use WyChoong\Mpgs\Clients\Mpgs;
 
 class MpgsPaymentType extends AbstractPayment
 {
-
     protected $orderResponse;
+
     /**
      * Authorize the payment for processing.
-     *
-     * @return \Lunar\Base\DataTransferObjects\PaymentAuthorize
      */
     public function authorize(): PaymentAuthorize
     {
-        if (!$this->order) {
-            if (!$this->order = $this->cart->order) {
+        if (! $this->order) {
+            if (! $this->order = $this->cart->order) {
                 $this->order = $this->cart->createOrder();
             }
         }
@@ -55,9 +53,7 @@ class MpgsPaymentType extends AbstractPayment
     /**
      * Capture a payment for a transaction.
      *
-     * @param  \Lunar\Models\Transaction  $transaction
      * @param  int  $amount
-     * @return \Lunar\Base\DataTransferObjects\PaymentCapture
      */
     public function capture(Transaction $transaction, $amount = 0): PaymentCapture
     {
@@ -67,10 +63,7 @@ class MpgsPaymentType extends AbstractPayment
     /**
      * Refund a captured transaction
      *
-     * @param  \Lunar\Models\Transaction  $transaction
-     * @param  int  $amount
      * @param  string|null  $notes
-     * @return \Lunar\Base\DataTransferObjects\PaymentRefund
      */
     public function refund(Transaction $transaction, int $amount = 0, $notes = null): PaymentRefund
     {
@@ -93,9 +86,6 @@ class MpgsPaymentType extends AbstractPayment
 
     /**
      * Return a successfully released payment.
-     *
-     * @return \Lunar\Base\DataTransferObjects\PaymentAuthorize
-     *
      */
     private function releaseSuccess(): PaymentAuthorize
     {

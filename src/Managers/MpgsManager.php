@@ -8,17 +8,15 @@ use Lunar\Models\Cart;
 use WyChoong\Mpgs\Clients\Mpgs;
 
 /**
- *
  * here to have Lunar logic
  */
-
 class MpgsManager
 {
     protected static Closure $initiateCheckoutUsing;
 
     protected static ?Closure $notifyUsing = null;
 
-    public function setupClientUsing(Closure | array $setupUsing)
+    public function setupClientUsing(Closure|array $setupUsing)
     {
         Mpgs::setupClientUsing($setupUsing);
     }
@@ -60,7 +58,7 @@ class MpgsManager
         $paymentIntent = $result['intent'];
         $orderId = $result['order_id'];
 
-        if (!$meta) {
+        if (! $meta) {
             $cart->update([
                 'meta' => [
                     'payment_intent' => $paymentIntent->session->id,

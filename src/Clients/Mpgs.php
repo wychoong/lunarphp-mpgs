@@ -6,7 +6,6 @@ use Closure;
 use Exception;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
 class Mpgs
 {
@@ -18,14 +17,14 @@ class Mpgs
 
     protected static string $version;
 
-    private static Closure | array $setupUsing = [];
+    private static Closure|array $setupUsing = [];
 
     public function __construct()
     {
         $this->setupClient();
     }
 
-    public static function setupClientUsing(Closure | array $setupUsing)
+    public static function setupClientUsing(Closure|array $setupUsing)
     {
         static::$setupUsing = $setupUsing;
     }
@@ -54,7 +53,7 @@ class Mpgs
     {
         $value = config("lunar-mpgs.{$key}", $default);
 
-        if (!$value && str($key)->contains('action.')) {
+        if (! $value && str($key)->contains('action.')) {
             $action = str($key)->afterLast('action.')->toString();
             $value = match ($action) {
                 'initiate_checkout' => '/session',
@@ -69,7 +68,7 @@ class Mpgs
 
     protected function getUrl(string $action): string
     {
-        return '{+gateway}/version/{version}/merchant/{merchantId}' . self::config("action.{$action}");
+        return '{+gateway}/version/{version}/merchant/{merchantId}'.self::config("action.{$action}");
     }
 
     protected function execute(string $method, string $action, array $data = [], array $urlParams = []): Response
@@ -81,13 +80,12 @@ class Mpgs
         ], $urlParams));
 
         return $client
-            ->withBasicAuth('merchant.' . static::$merchantId, static::$apiPassword)
+            ->withBasicAuth('merchant.'.static::$merchantId, static::$apiPassword)
             ->{$method}($this->getUrl($action), $data);
     }
 
     /**
      * Create a MPGS checkout session and return the result.
-     *
      */
     public static function initiateCheckout(array $data)
     {
@@ -104,7 +102,6 @@ class Mpgs
 
     /**
      * Retrieve MPGS checkout session details
-     *
      */
     public static function retrieveSession(string $sessionId)
     {
@@ -120,7 +117,6 @@ class Mpgs
 
     /**
      * Retrieve the order details from MPGS.
-     *
      */
     public static function retrieveOrder($orderId)
     {
