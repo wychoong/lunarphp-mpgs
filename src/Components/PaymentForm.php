@@ -11,8 +11,6 @@ class PaymentForm extends Component
 {
     /**
      * The instance of the order.
-     *
-     * @var Order
      */
     public Cart $cart;
 

@@ -2,7 +2,10 @@
 
 namespace WyChoong\Mpgs\Tests;
 
+use Cartalyst\Converter\Laravel\ConverterServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Livewire\LivewireServiceProvider;
+use Lunar\LunarServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 use WyChoong\Mpgs\MpgsPaymentServiceProvider;
 
@@ -20,6 +23,9 @@ class TestCase extends Orchestra
     protected function getPackageProviders($app)
     {
         return [
+            LivewireServiceProvider::class,
+            LunarServiceProvider::class,
+            ConverterServiceProvider::class,
             MpgsPaymentServiceProvider::class,
         ];
     }

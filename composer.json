@@ -21,7 +21,7 @@
         "illuminate/contracts": "^9.0 | ^10.0",
         "illuminate/support": "^9.0 | ^10.0",
         "livewire/livewire": "^2.0",
-        "lunarphp/lunar": "^0.3.0-alpha.2",
+        "lunarphp/core": "^0.3.0-alpha.2",
         "spatie/laravel-package-tools": "^1.14.0"
     },
     "require-dev": {
