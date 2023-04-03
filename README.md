@@ -5,7 +5,7 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/wychoong/lunarphp-mpgs/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/wychoong/lunarphp-mpgs/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/wychoong/lunarphp-mpgs.svg?style=flat-square)](https://packagist.org/packages/wychoong/lunarphp-mpgs)
 
-MPGS Hosted checkout integration for Lunar
+MPGS Hosted checkout integration for [Lunar](https://github.com/lunarphp/lunar)
 
 Supported action
 - purchase
