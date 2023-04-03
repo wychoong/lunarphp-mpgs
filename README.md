@@ -144,6 +144,10 @@ To redirect or add handling after payment verified, set your route or listen to 
 'mpgsPaymentFailed'
 ```
 
+## Roadmap
+- support capture/refund if applicable
+- implement omnipay-mpgs adapter
+
 ## Testing
 
 ```bash
