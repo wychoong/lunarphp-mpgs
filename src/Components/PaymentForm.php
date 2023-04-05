@@ -21,26 +21,48 @@ class PaymentForm extends Component
         'cardDetailsSubmitted',
     ];
 
+    protected $queryString = [
+        'resultIndicator',
+    ];
+
+    public ?string $resultIndicator = null;
+
+    public function mount()
+    {
+        if ($this->resultIndicator) {
+            return $this->checkoutSuccess();
+        }
+    }
+
     public function checkout()
     {
         $this->cart->calculate();
         $intent = MpgsFacade::createIntent($this->cart);
+
+        if ($intent === false) {
+            return false;
+        }
 
         return [
             'session' => $intent,
         ];
     }
 
-    public function checkoutSuccess()
+    protected function checkoutSuccess()
     {
         $mpgs = (new MpgsPaymentType());
-        $payment = $mpgs->cart($this->cart)->authorize();
+
+        $payment = $mpgs->cart($this->cart)->withData([
+            'resultIndicator' => $this->resultIndicator,
+        ])->authorize();
 
         if ($payment->success) {
             $this->emit('mpgsPaymentSuccess');
 
             if (config('lunar-mpgs.route.payment-success')) {
-                return redirect()->route(config('lunar-mpgs.route.payment-success'));
+                $this->shouldSkipRender = false; //# workaround with an issue with livewire
+
+                return $this->redirectRoute(config('lunar-mpgs.route.payment-success'));
             }
 
             return;
@@ -49,8 +71,11 @@ class PaymentForm extends Component
         $this->emit('mpgsPaymentFailed');
 
         if (config('lunar-mpgs.route.payment-failed')) {
-            return redirect()->route(config('lunar-mpgs.route.payment-failed'));
+            $this->shouldSkipRender = false; //# workaround with an issue with livewire
+
+            return $this->redirectRoute(config('lunar-mpgs.route.payment-failed'));
         }
+
     }
 
     /**

@@ -10,12 +10,23 @@
                 .then(resp => {
                     this.initializing = false
 
+                    if(resp.error){
+                        console.log('error')
+
+                        return
+                    }
+
                     if(resp.session){
                         this.processing = true
 
+                        sessionStorage.removeItem('HostedCheckout_sessionId')
+
+                        session = resp.session
+
                         Checkout.configure({
                             session:{
-                                id: resp.session
+                                id: session.id,
+                                version: session.version,
                             }
                         });
 
@@ -25,7 +36,6 @@
         }
     }"
     @checkout='checkout'
-    @mpgs-complete.window='$wire.checkoutSuccess()'
 >
     <x-lunar-mpgs::embed-container />
     <x-lunar-mpgs::checkout-button />

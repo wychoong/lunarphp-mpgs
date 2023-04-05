@@ -37,6 +37,15 @@ class MpgsPaymentType extends AbstractPayment
 
         $meta = (array) $this->cart->meta;
 
+        $resultIndicator = $this->data['resultIndicator'];
+
+        if ($resultIndicator != $meta['success_indicator']) {
+            return new PaymentAuthorize(
+                success: false,
+                message: 'Payment failed',
+            );
+        }
+
         $orderId = $meta['order_id'];
         $this->orderResponse = Mpgs::retrieveOrder($orderId);
 
