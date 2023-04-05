@@ -33,6 +33,7 @@ class PaymentForm extends Component
             return $this->checkoutSuccess();
         }
     }
+
     public function checkout()
     {
         $this->cart->calculate();
@@ -59,7 +60,7 @@ class PaymentForm extends Component
             $this->emit('mpgsPaymentSuccess');
 
             if (config('lunar-mpgs.route.payment-success')) {
-                $this->shouldSkipRender = false; ## workaround with an issue with livewire
+                $this->shouldSkipRender = false; //# workaround with an issue with livewire
 
                 return $this->redirectRoute(config('lunar-mpgs.route.payment-success'));
             }
@@ -70,12 +71,11 @@ class PaymentForm extends Component
         $this->emit('mpgsPaymentFailed');
 
         if (config('lunar-mpgs.route.payment-failed')) {
-            $this->shouldSkipRender = false; ## workaround with an issue with livewire
+            $this->shouldSkipRender = false; //# workaround with an issue with livewire
 
             return $this->redirectRoute(config('lunar-mpgs.route.payment-failed'));
         }
 
-        return;
     }
 
     /**
