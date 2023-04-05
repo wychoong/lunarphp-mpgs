@@ -64,7 +64,7 @@ class MpgsManager
             ];
         }
 
-        if (!$meta) {
+        if (! $meta) {
             $cart->update([
                 'meta' => [
                     'checkout_session' => $response->session->id,
