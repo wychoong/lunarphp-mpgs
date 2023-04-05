@@ -45,7 +45,7 @@ class MpgsManager
         ]);
     }
 
-    public function createIntent(Cart $cart): string
+    public function createIntent(Cart $cart)
     {
         $meta = (array) $cart->meta;
 
@@ -55,24 +55,32 @@ class MpgsManager
             $cart
         );
 
-        $paymentIntent = $result['intent'];
+        $response = $result['response'];
         $orderId = $result['order_id'];
 
-        if (! $meta) {
+        if ($response->result !== 'SUCCESS') {
+            return [
+                'error' => true,
+            ];
+        }
+
+        if (!$meta) {
             $cart->update([
                 'meta' => [
-                    'payment_intent' => $paymentIntent->session->id,
+                    'checkout_session' => $response->session->id,
+                    'success_indicator' => $response->successIndicator,
                     'order_id' => $orderId,
                 ],
             ]);
         } else {
-            $meta['payment_intent'] = $paymentIntent->session->id;
+            $meta['checkout_session'] = $response->session->id;
+            $meta['success_indicator'] = $response->successIndicator;
             $meta['order_id'] = $orderId;
             $cart->meta = $meta;
             $cart->save();
         }
 
-        return $paymentIntent->session->id;
+        return $response->session;
     }
 
     public static function initiateCheckoutUsing(Closure $initiateCheckoutUsing)
@@ -90,7 +98,7 @@ class MpgsManager
 
         return [
             'order_id' => $data['order']['id'] ?? null,
-            'intent' => Mpgs::initiateCheckout($data),
+            'response' => Mpgs::initiateCheckout($data),
         ];
     }
 }
