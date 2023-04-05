@@ -41,7 +41,7 @@ class MpgsPaymentServiceProvider extends PackageServiceProvider
         Blade::directive('mpgsScripts', function () {
             $jsUrl = config('lunar-mpgs.checkout_js');
 
-            return  <<<EOT
+            return <<<EOT
                 <script type="text/javascript" src="$jsUrl"
                     data-error="errorCallback" data-cancel="cancelCallback" data-complete="completeCallback" >
                 </script>
