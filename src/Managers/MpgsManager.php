@@ -51,8 +51,8 @@ class MpgsManager
             $cart->total->value / $cart->currency->factor,
             $cart->currency->code,
             $cart
-        );        
-        
+        );
+
         $cart->refresh();
         $meta = (array) $cart->meta;
 
