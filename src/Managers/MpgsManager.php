@@ -47,13 +47,14 @@ class MpgsManager
 
     public function createIntent(Cart $cart)
     {
-        $meta = (array) $cart->meta;
-
         $result = $this->buildIntent(
             $cart->total->value / $cart->currency->factor,
             $cart->currency->code,
             $cart
-        );
+        );        
+        
+        $cart->refresh();
+        $meta = (array) $cart->meta;
 
         $response = $result['response'];
         $orderId = $result['order_id'];
