@@ -26,7 +26,7 @@ class MpgsManager
         static::$notifyUsing = $notifyUsing;
     }
 
-    public static function notify($message, $error = false, $data = null)
+    public static function notify(string $message, bool $error = false, $data = null)
     {
         if (blank(static::$notifyUsing)) {
             if ($error) {
@@ -47,7 +47,7 @@ class MpgsManager
 
     public function createIntent(Cart $cart)
     {
-        $result = $this->buildIntent(
+        $intent = $this->buildIntent(
             $cart->total->value / $cart->currency->factor,
             $cart->currency->code,
             $cart
@@ -56,8 +56,8 @@ class MpgsManager
         $cart->refresh();
         $meta = (array) $cart->meta;
 
-        $response = $result['response'];
-        $orderId = $result['order_id'];
+        $response = $intent['response'];
+        $orderId = $intent['order_id'];
 
         if ($response->result !== 'SUCCESS') {
             return [
@@ -65,7 +65,7 @@ class MpgsManager
             ];
         }
 
-        if (! $meta) {
+        if (!$meta) {
             $cart->update([
                 'meta' => [
                     'checkout_session' => $response->session->id,
@@ -97,9 +97,12 @@ class MpgsManager
             'cart' => $cart,
         ]);
 
+        $response = Mpgs::initiateCheckout($data);
+        static::notify(message: 'initiateCheckout', data: $response);
+
         return [
             'order_id' => $data['order']['id'] ?? null,
-            'response' => Mpgs::initiateCheckout($data),
+            'response' => $response,
         ];
     }
 }

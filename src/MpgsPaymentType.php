@@ -11,6 +11,7 @@ use Lunar\Models\Currency;
 use Lunar\Models\Transaction;
 use Lunar\PaymentTypes\AbstractPayment;
 use WyChoong\Mpgs\Clients\Mpgs;
+use WyChoong\Mpgs\Facades\Mpgs as MpgsFacade;
 
 class MpgsPaymentType extends AbstractPayment
 {
@@ -21,8 +22,8 @@ class MpgsPaymentType extends AbstractPayment
      */
     public function authorize(): PaymentAuthorize
     {
-        if (! $this->order) {
-            if (! $this->order = $this->cart->order) {
+        if (!$this->order) {
+            if (!$this->order = $this->cart->order) {
                 $this->order = $this->cart->createOrder();
             }
         }
@@ -48,6 +49,8 @@ class MpgsPaymentType extends AbstractPayment
 
         $orderId = $meta['order_id'];
         $this->orderResponse = Mpgs::retrieveOrder($orderId);
+
+        MpgsFacade::notify(message: 'retrieveOrder', data: $this->orderResponse);
 
         if ($this->orderResponse->result == 'SUCCESS' && $this->orderResponse->status == 'CAPTURED') {
             return $this->releaseSuccess();

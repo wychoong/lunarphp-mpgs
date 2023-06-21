@@ -28,7 +28,7 @@ You can publish the config file with:
 php artisan vendor:publish --tag="lunarphp-mpgs-config"
 ```
 
-###Enable the driver
+### Enable the driver
 Set the driver in `config/lunar/payments.php`
 ```php
 <?php
@@ -53,7 +53,7 @@ MPGS_API_PASSWORD=
 MPGS_VERSION=
 ```
 
-#Setup
+# Setup
 We use closure to return the data you want to pass to the api
 
 ```php

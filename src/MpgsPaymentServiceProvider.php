@@ -42,7 +42,7 @@ class MpgsPaymentServiceProvider extends PackageServiceProvider
             $jsUrl = config('lunar-mpgs.checkout_js');
 
             return <<<EOT
-                <script type="text/javascript" src="$jsUrl"
+                <script src="$jsUrl"
                     data-error="errorCallback" data-cancel="cancelCallback" data-complete="completeCallback" >
                 </script>
                 <script type="text/javascript">
